@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>e-Darpan UX Flow Diagram — Editable</title>
+<style>
+  :root{
+    --citizen:#166534; --asst:#b45309; --lrs:#1d4ed8; --lra:#c2410c; --co:#7e22ce; --ai:#0f766e;
+    --bg:#eef7f1; --card:#ffffff; --line:#cbd5e1; --text:#0f172a; --muted:#64748b;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Arial,sans-serif;background:linear-gradient(135deg,#eef7f1,#f8fafc);color:var(--text)}
+  .page{width:100%;max-width:none;margin:0 auto;padding:20px}
+  .header{background:linear-gradient(135deg,#155c32,#1a6e3c,#0f766e);color:white;border-radius:22px;padding:28px 32px;box-shadow:0 16px 40px rgba(21,92,50,.18);position:relative;overflow:hidden}
+  .header:after{content:"e";position:absolute;right:28px;bottom:-70px;font-family:Georgia,serif;font-size:250px;font-weight:900;color:rgba(255,255,255,.07)}
+  .brand{display:flex;align-items:center;gap:14px;position:relative;z-index:1}.logo{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;border:1px solid rgba(255,255,255,.35)}
+  h1{margin:0;font-size:30px;letter-spacing:.3px}.sub{margin:7px 0 0;color:rgba(255,255,255,.78);font-size:14px;line-height:1.6}.legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;position:relative;z-index:1}.pill{border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2)}
+  .edit-toolbar{position:sticky;top:0;z-index:99;margin:0 0 18px;background:#ffffff;border:1px solid #dbeafe;border-radius:16px;padding:12px 14px;display:flex;gap:10px;align-items:center;justify-content:space-between;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+  .edit-toolbar strong{font-size:14px;color:#155c32}.edit-toolbar span{font-size:12px;color:#64748b}.edit-actions{display:flex;gap:8px;flex-wrap:wrap}.edit-actions button{border:0;border-radius:10px;padding:9px 12px;font-size:12px;font-weight:800;cursor:pointer;background:#155c32;color:#fff}.edit-actions button.secondary{background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+  .diagram-wrap{margin-top:20px;background:rgba(255,255,255,.78);border:1px solid #dbeafe;border-radius:22px;padding:12px;box-shadow:0 12px 35px rgba(15,23,42,.08);overflow:visible;width:100%}
+  .flow{width:100%;min-width:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:start;position:relative}.role-col{display:flex;flex-direction:column;gap:12px}.role-head{position:sticky;top:0;z-index:2;color:white;border-radius:14px;padding:14px 10px;text-align:center;font-weight:900;letter-spacing:.4px;box-shadow:0 10px 25px rgba(15,23,42,.12)}
+  .role-head small{display:block;font-size:11px;opacity:.82;margin-top:4px;font-weight:600}.citizen .role-head{background:linear-gradient(135deg,var(--citizen),#22c55e)}.asst .role-head{background:linear-gradient(135deg,var(--asst),#f59e0b)}.lrs .role-head{background:linear-gradient(135deg,var(--lrs),#60a5fa)}.lra .role-head{background:linear-gradient(135deg,var(--lra),#fb923c)}.co .role-head{background:linear-gradient(135deg,var(--co),#c084fc)}
+  .box{background:var(--card);border:1px solid #e2e8f0;border-left:5px solid #94a3b8;border-radius:14px;padding:12px 12px 13px;min-height:132px;box-shadow:0 5px 16px rgba(15,23,42,.05);position:relative}.box:before{content:attr(data-step);position:absolute;top:10px;right:12px;font-size:11px;font-weight:900;color:#94a3b8}.box h3{margin:0 30px 7px 0;font-size:13.4px}.box p{margin:0;font-size:11.6px;line-height:1.48;color:#475569}.box ul{margin:7px 0 0 15px;padding:0;color:#475569;font-size:11.3px;line-height:1.4}.citizen .box{border-left-color:var(--citizen)}.asst .box{border-left-color:var(--asst)}.lrs .box{border-left-color:var(--lrs)}.lra .box{border-left-color:var(--lra)}.co .box{border-left-color:var(--co)}
+  .ai-box{border-left-color:var(--ai)!important;background:linear-gradient(180deg,#ecfdf5,#ffffff)}.route-box{border-left-color:#475569!important;background:#f8fafc}.route-box h3{color:#334155}.empty{min-height:142px;border-radius:16px;border:1px dashed #cbd5e1;background:rgba(248,250,252,.55)}.arrow{height:28px;display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:900;font-size:20px}.arrow span{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.5px}.note-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}.note{background:white;border:1px solid #e2e8f0;border-radius:16px;padding:16px;box-shadow:0 5px 16px rgba(15,23,42,.05)}.note h3{margin:0 0 8px;font-size:14px}.note p{margin:0;color:#475569;font-size:12.8px;line-height:1.55}.badge{display:inline-block;padding:3px 8px;border-radius:99px;font-size:10.5px;font-weight:900;margin-bottom:8px}.b1{background:#dcfce7;color:#166534}.b2{background:#fef3c7;color:#92400e}.b3{background:#ede9fe;color:#6b21a8}.b4{background:#ccfbf1;color:#0f766e}
+  .routes{margin-top:18px;background:white;border:1px solid #e2e8f0;border-radius:18px;padding:16px}.routes h2{margin:0 0 12px;font-size:17px;color:#155c32}.route-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.route-card{border:1px solid #e2e8f0;border-radius:14px;padding:14px;background:#f8fafc}.route-card strong{display:block;font-size:13px;margin-bottom:8px;color:#0f172a}.route-line{font-size:12.5px;line-height:1.5;color:#475569;font-weight:700}
+  [contenteditable="true"]{outline:2px dashed transparent;outline-offset:3px;border-radius:6px;transition:.15s}
+  [contenteditable="true"]:hover{outline-color:#93c5fd;background:rgba(219,234,254,.35)}
+  [contenteditable="true"]:focus{outline-color:#2563eb;background:#eff6ff}
+  .box[contenteditable="true"]{outline-offset:4px}.empty.edit-slot{display:grid;place-items:center;color:#94a3b8;font-size:12px;font-weight:700;text-align:center;padding:12px}
+  .box.selected{outline:3px solid #2563eb;outline-offset:3px}
+  .box-tools{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;border-top:1px dashed #cbd5e1;padding-top:10px}
+  .box-tools button{border:0;border-radius:8px;padding:6px 8px;font-size:10.5px;font-weight:800;cursor:pointer;background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+  .box-tools button:hover{background:#dbeafe;color:#1d4ed8}
+  .add-inside{border:1px dashed #94a3b8;background:#f8fafc;color:#64748b;border-radius:14px;padding:12px;font-size:12px;font-weight:800;cursor:pointer;text-align:center}
+  .add-inside:hover{background:#eff6ff;border-color:#2563eb;color:#1d4ed8}
+
+  /* Disable hover visual changes on Citizen and ASST blocks */
+  .citizen .box:hover,
+  .asst .box:hover{
+    transform:none!important;
+    box-shadow:0 5px 16px rgba(15,23,42,.06)!important;
+    background:var(--card)!important;
+  }
+  .citizen .box [contenteditable="true"]:hover,
+  .asst .box [contenteditable="true"]:hover{
+    outline-color:transparent!important;
+    background:transparent!important;
+  }
+  .citizen .box-tools button:hover,
+  .asst .box-tools button:hover{
+    background:#f1f5f9!important;
+    color:#334155!important;
+  }
+
+  @media (max-width:1200px){.page{padding:12px}.flow{gap:7px}.box{padding:10px;min-height:120px}.box h3{font-size:12.4px}.box p,.box ul{font-size:10.8px}.role-head{font-size:13px;padding:12px 6px}.role-head small{font-size:9.5px}.edit-toolbar{position:static;align-items:flex-start;flex-direction:column}.note-grid{grid-template-columns:repeat(2,1fr)}}
+
+  @media print{.edit-toolbar{display:none}body{background:white}.page{padding:10px}.header,.diagram-wrap,.note,.routes{box-shadow:none}.role-head{position:static}.flow{min-width:0}.diagram-wrap{overflow:visible}.note-grid,.route-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="edit-toolbar">
+    <div><strong>Editable UX Diagram</strong><br><span>Click any text to edit. Select a box to duplicate/delete, or add new boxes, route cards and note sections.</span></div>
+    <div class="edit-actions">
+      <button onclick="downloadEditedHtml()">Save HTML</button>
+      <button class="secondary" onclick="addFlowBox()">+ Add Box</button>
+      <button class="secondary" onclick="duplicateSelectedBox()">Duplicate Box</button>
+      <button class="secondary" onclick="deleteSelectedBox()">Delete Box</button>
+      <button class="secondary" onclick="addNoteCard()">+ Add Note</button>
+      <button class="secondary" onclick="window.print()">Print / Save PDF</button>
+      <button class="secondary" onclick="toggleEditMode()" id="editToggle">Editing: ON</button>
+    </div>
+  </div>
+
+  <section class="header">
+    <div class="brand"><div class="logo">🪞</div><div><h1>e-Darpan UX Flow Diagram</h1><p class="sub">Horizontal role-based flow: Citizen → ASST → LRS → LRA → CO. Vertical boxes show detailed user actions, purpose-based routes, officer-to-citizen query loop, WhatsApp/SMS notifications for every action, AI chatbot, AI summaries and system movement from application submission to case closure.</p></div></div>
+    <div class="legend"><span class="pill">🔐 OTP / Sewa-Setu Login</span><span class="pill">🤖 AI Chatbot for all users</span><span class="pill">✨ AI Summary & Key Points</span><span class="pill">📲 WhatsApp/SMS Alerts</span><span class="pill">📂 Document Upload</span><span class="pill">✅ LRA Verification</span><span class="pill">🔁 Query loop for all officers</span><span class="pill">✅ Final Order</span></div>
+  </section>
+
+  <section class="diagram-wrap">
+    <div class="flow">
+      <div class="role-col citizen"><div class="role-head">Citizen<small>Applicant / Public User</small></div></div>
+      <div class="role-col asst"><div class="role-head">ASST<small>Dealing Assistant</small></div></div>
+      <div class="role-col lrs"><div class="role-head">LRS<small>Land Records Supervisor</small></div></div>
+      <div class="role-col lra"><div class="role-head">LRA<small>Field Verifying Officer</small></div></div>
+      <div class="role-col co"><div class="role-head">CO<small>Circle Officer</small></div></div>
+
+      <div class="role-col citizen">
+        <div class="box" data-step="01"><h3>Login / New Registration</h3><p>Citizen opens e-Darpan, enters mobile number, verifies OTP and creates or accesses the account. The portal supports secure OTP login and bilingual citizen interface. Citizen can access the portal using Sewa-Setu portal also.</p></div>
+        <div class="box ai-box" data-step="AI"><h3>AI Chatbot Assistance</h3><p>AI chatbot will be available for citizen to understand required documents, application process, case status, query response and final order download steps.</p></div>
+        <div class="box" data-step="02"><h3>Submit New Application</h3><p>Citizen fills applicant details, address, purpose/subject, district, circle office and uploads required documents. AI based auto completion of the remarks will be available for citizen. WhatsApp/SMS notification will be sent to the citizen along with the acknowledgement for this action.</p></div>
+        <div class="box" data-step="03"><h3>Track Case Status</h3><p>Citizen dashboard shows case number, submitted date, current stage, action required status, in-progress cases and completed cases. WhatsApp/SMS updates are sent whenever the stage changes.</p></div>
+        <div class="box ai-box" data-step="AI"><h3>AI Summary & Key Points</h3><p>Every citizen case view will show AI generated case summary, current action required, important dates, pending documents and key points in simple language.</p></div>
+        <div class="box" data-step="04"><h3>Respond to Query</h3><p>If ASST/LRS/LRA/CO asks for clarification, citizen uploads missing/clear documents and submits remarks. The query response reaches the concerned officer dashboard, and WhatsApp/SMS notification is sent for every action required case.</p></div>
+        <div class="box" data-step="05"><h3>Receive Final Order</h3><p>After CO decision, citizen receives WhatsApp/SMS acknowledgement and can download final order PDF and application receipt from the portal.</p></div>
+      </div>
+
+      <div class="role-col asst">
+        <div class="box ai-box" data-step="AI"><h3>AI Chatbot + Case Summary</h3><p>ASST gets AI chatbot support in dashboard and case view. AI summary and key points will highlight missing documents, citizen remarks, purpose/category, SLA status and recommended scrutiny focus. WhatsApp/SMS notification is triggered for every forward, reject, query or return action.</p></div>
+        <div class="box" data-step="06"><h3>ASST Dashboard</h3><p>ASST dashboard shows new applications, pending applications, returned/query cases and internal cases which are registered by the ASST. Citizen query replies raised by any officer can also be viewed against the case.</p></div>
+        <div class="box" data-step="07"><h3>Preliminary Scrutiny for Citizen Cases</h3><p>ASST verifies application details. WhatsApp/SMS notification is sent for each action. Following actions can be performed:</p><ul><li>Forward</li><li>Reject</li><li>Send query / return to citizen if incomplete</li></ul></div>
+        <div class="box route-box" data-step="Q"><h3>Query to Citizen / Query Inbox</h3><p>For any step, ASST can ask the citizen for more details or documents. Citizen response will come back to the ASST case view, with WhatsApp/SMS notification for both query and response.</p></div>
+        <div class="box" data-step="08"><h3>Register e-Darpan Cases</h3><p>If citizen visits office or for internal cases, ASST can register e-Darpan cases by himself from the officer portal. The applicant receives acknowledgement through WhatsApp/SMS after registration.</p></div>
+        <div class="box route-box" data-step="R1"><h3>Purpose-Based Routing</h3><p>Based on the selected case purpose/category, ASST registered cases may follow ASST → CO or ASST → LRS → LRA → CO based on the category-process flow configuration. WhatsApp/SMS notification is sent whenever the case is routed.</p></div>
+      </div>
+
+      <div class="role-col lrs">
+        <div class="box ai-box" data-step="AI"><h3>AI Chatbot + Case Summary</h3><p>LRS gets AI chatbot support in dashboard and case view. AI summary and key points will show scrutiny observations, document readiness, priority, workload and recommended next action. WhatsApp/SMS notification is triggered for assignment, query, return and forwarding actions.</p></div>
+        <div class="box" data-step="09"><h3>LRS Dashboard</h3><p>LRS dashboard shows cases received from ASST, cases pending LRA assignment, cases already assigned to LRA, LRA reports received, citizen query responses, cases reverted from LRA, cases returned to ASST and cases forwarded to CO. WhatsApp/SMS notification is sent for every action.</p></div>
+        <div class="box" data-step="10"><h3>Review ASST Scrutiny</h3><p>LRS receives scrutiny-passed cases from ASST, checks priority, subject, applicant details and document readiness before LRA assignment. LRS can query citizen for more details, and the citizen reply will appear in the LRS case view.</p></div>
+        <div class="box route-box" data-step="Q"><h3>Query to Citizen / Query Inbox</h3><p>For any step, LRS can ask the citizen for clarification or documents. Citizen response will be visible in the LRS case view, with WhatsApp/SMS notification for query and response.</p></div>
+        <div class="box" data-step="11"><h3>Assign Case to LRA</h3><p>LRS selects LRA based on availability/workload and category-process flow. WhatsApp/SMS notification is sent to the citizen and internal notification is sent to the assigned LRA.</p></div>
+        <div class="box route-box" data-step="REV"><h3>Revert to ASST</h3><p>If LRS finds gaps in ASST scrutiny, wrong category-process routing, missing documents or incomplete registration details, LRS can revert the case to ASST with remarks. ASST receives the case in returned queue and WhatsApp/SMS notification is sent for the action.</p></div>
+      </div>
+
+      <div class="role-col lra">
+        <div class="box ai-box" data-step="AI"><h3>AI Chatbot + Case Summary</h3><p>LRA gets AI chatbot support in dashboard and verification report view. AI summary and key points will show applicant details, land details, LRS instructions, pending deadline and checklist for verification. WhatsApp/SMS notification is triggered for query, report submission or return actions.</p></div>
+        <div class="box" data-step="13"><h3>LRA Dashboard</h3><p>LRA dashboard shows assigned cases, verification pending cases, deadlines, applicant details, location, documents, LRS/CO instructions, citizen query responses, reports submitted, cases reverted to LRS and cases returned by CO for re-verification.</p></div>
+        <div class="box" data-step="14"><h3>LRA Verification</h3><p>LRA verifies the case details, land/documents and factual points as required. If field visit is required, LRA will visit the location and record the observations.</p></div>
+        <div class="box route-box" data-step="Q"><h3>Query to Citizen / Query Inbox</h3><p>For any step, LRA can query the citizen for verification/document clarification. Citizen response will be visible in the LRA case view, with WhatsApp/SMS notification for query and response.</p></div>
+        <div class="box" data-step="15"><h3>LRA Report</h3><p>LRA uploads supporting photographs/documents wherever required, enters detailed remarks, selects recommendation such as approval/rejection/further inquiry and submits the verification report to CO. LRA can also query the citizen for more details, and WhatsApp/SMS notification is sent for every action.</p></div>
+        <div class="box route-box" data-step="REV"><h3>Revert to LRS</h3><p>If assignment details, LRS instructions, documents, location mapping or category details are incomplete, LRA can revert the case to LRS with remarks. LRS receives it in returned queue and WhatsApp/SMS notification is sent for the action.</p></div>
+      </div>
+
+      <div class="role-col co">
+        <div class="box ai-box" data-step="AI"><h3>AI Chatbot + Case Summary</h3><p>CO gets AI chatbot support in dashboard and case view. AI summary and key points will show full case history, ASST scrutiny, LRS remarks, LRA findings, SLA breach and decision support points. WhatsApp/SMS notification is triggered for every decision, query, transfer or closure action.</p></div>
+        <div class="box" data-step="16"><h3>CO Dashboard</h3><p>CO dashboard will have everything: all case details, user-wise reports, ASST/LRS/LRA-wise reports, SLA monitoring, pending final decisions and overall workflow monitoring.</p></div>
+        <div class="box" data-step="17"><h3>Review Applications</h3><p>CO reviews the application details, documents, ASST scrutiny, LRS remarks, LRA verification report, supporting photographs/documents, citizen query responses and AI generated summary/key points. CO can query the citizen for more details from the case view.</p></div>
+        <div class="box route-box" data-step="Q"><h3>Query to Citizen / Query Inbox</h3><p>For any step, CO can ask citizen for more details before final order. Citizen response will be visible in the CO case view, with WhatsApp/SMS notification for query and response.</p></div>
+        <div class="box route-box" data-step="REV"><h3>Revert to ASST / LRA</h3><p>CO can revert cases based on source path. If the case came directly from ASST, CO can revert it to ASST. If the case came through LRA verification, CO can revert it to LRA for re-verification or clarification. WhatsApp/SMS notification is sent for every revert action.</p></div>
+        <div class="box route-box" data-step="T"><h3>Transfer / Reassignment</h3><p>CO can forcefully transfer or reassign delayed, disputed or workload-sensitive cases to a different LRA. The reassigned LRA receives the case in the LRA dashboard and WhatsApp/SMS notification is sent for the action.</p></div>
+        <div class="box" data-step="18"><h3>Case Closure</h3><p>CO reviews the applications and closes the Application/Case. Final decision may include approval, rejection, return for further inquiry or other official order as per case purpose. WhatsApp/SMS notification is sent after closure.</p></div>
+        <div class="box" data-step="19"><h3>Final Notification</h3><p>System generates final order PDF, updates case status, sends WhatsApp/SMS acknowledgement to citizen and makes final order PDF and application receipt available for download.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="note-grid">
+    <div class="note"><span class="badge b1">Core citizen flow</span><h3>Transparent tracking</h3><p>Citizen can apply, track every stage, respond to officer queries and download the signed final order from one portal.</p></div>
+    <div class="note"><span class="badge b2">Office workflow</span><h3>Role-based processing</h3><p>ASST handles registration/scrutiny, LRS supervises and assigns, LRA verifies case facts and visits the field only if required, and CO handles transfer/reassignment and case closure.</p></div>
+    <div class="note"><span class="badge b3">Revert movement</span><h3>Clear return paths</h3><p>CO can revert to ASST or LRA based on the source path, LRA can revert to LRS, and LRS can revert to ASST with remarks.</p></div>
+    <div class="note"><span class="badge b4">AI layer</span><h3>AI for every user</h3><p>AI chatbot, AI summary and AI key points are available in every user dashboard and case view.</p></div>
+  </section>
+</div>
+
+<script>
+  let editingEnabled = true;
+  let selectedBox = null;
+  const editableSelector = 'h1, h2, h3, p, small, li, strong, .role-head, .pill, .badge, .arrow span, .route-line, .edit-slot, .note, .route-card';
+
+  function setEditable(on){
+    editingEnabled = on;
+    document.querySelectorAll(editableSelector).forEach(el => {
+      if(!el.closest('.edit-toolbar') && !el.classList.contains('box-tools')) el.setAttribute('contenteditable', on ? 'true' : 'false');
+    });
+    document.getElementById('editToggle').textContent = 'Editing: ' + (on ? 'ON' : 'OFF');
+  }
+  function toggleEditMode(){ setEditable(!editingEnabled); }
+
+  function selectBox(box){
+    document.querySelectorAll('.box.selected').forEach(b=>b.classList.remove('selected'));
+    selectedBox = box;
+    if(box) box.classList.add('selected');
+  }
+
+  function enhanceBoxes(){
+    document.querySelectorAll('.role-col:not(:has(.role-head))').forEach(col=>{
+      if(!col.querySelector(':scope > .add-inside')){
+        const add = document.createElement('button');
+        add.className = 'add-inside';
+        add.type = 'button';
+        add.textContent = '+ Add box in this section';
+        add.onclick = () => createBoxInColumn(col);
+        col.appendChild(add);
+      }
+    });
+    document.querySelectorAll('.box').forEach(box=>{
+      box.onclick = (e)=>{ if(!e.target.closest('.box-tools')) selectBox(box); };
+      if(!box.querySelector(':scope > .box-tools')){
+        const tools = document.createElement('div');
+        tools.className = 'box-tools';
+        tools.setAttribute('contenteditable','false');
+        tools.innerHTML = '<button type="button">+ Below</button><button type="button">Duplicate</button><button type="button">Delete</button>';
+        const [add, dup, del] = tools.querySelectorAll('button');
+        add.onclick = (e)=>{ e.stopPropagation(); createBoxInColumn(box.parentElement, box.nextSibling); };
+        dup.onclick = (e)=>{ e.stopPropagation(); const c=box.cloneNode(true); c.classList.remove('selected'); c.querySelector('.box-tools')?.remove(); box.after(c); enhanceBoxes(); setEditable(editingEnabled); };
+        del.onclick = (e)=>{ e.stopPropagation(); if(confirm('Delete this box?')) { if(selectedBox===box) selectedBox=null; box.remove(); } };
+        box.appendChild(tools);
+      }
+    });
+  }
+
+  function createBoxInColumn(col, before=null){
+    const box = document.createElement('div');
+    box.className = 'box route-box';
+    box.setAttribute('data-step','NEW');
+    box.innerHTML = '<h3>New Editable Step</h3><p>Write the step details here. This box can be edited, duplicated, deleted or moved by adding another box.</p>';
+    const addButton = col.querySelector(':scope > .add-inside');
+    col.insertBefore(box, before || addButton || null);
+    enhanceBoxes(); setEditable(editingEnabled); selectBox(box); box.querySelector('h3').focus();
+  }
+
+  function addFlowBox(){
+    const roles = Array.from(document.querySelectorAll('.flow > .role-col:not(:has(.role-head))'));
+    const labels = ['Citizen','ASST','LRS','LRA','CO'];
+    const choice = prompt('Add box under which role? Type: Citizen, ASST, LRS, LRA, or CO', 'ASST');
+    if(!choice) return;
+    const idx = labels.findIndex(x => x.toLowerCase() === choice.trim().toLowerCase());
+    if(idx < 0) { alert('Role not found. Please type Citizen, ASST, LRS, LRA, or CO.'); return; }
+    createBoxInColumn(roles[idx]);
+  }
+  function duplicateSelectedBox(){
+    if(!selectedBox){ alert('Select a box first.'); return; }
+    const c=selectedBox.cloneNode(true); c.classList.remove('selected'); c.querySelector('.box-tools')?.remove(); selectedBox.after(c); enhanceBoxes(); setEditable(editingEnabled); selectBox(c);
+  }
+  function deleteSelectedBox(){
+    if(!selectedBox){ alert('Select a box first.'); return; }
+    if(confirm('Delete selected box?')){ const old=selectedBox; selectedBox=null; old.remove(); }
+  }
+  function addRouteCard(){
+    alert('Route section has been removed as requested. Use + Add Note or + Add Box to add new content.');
+  }
+  function addNoteCard(){
+    const grid = document.querySelector('.note-grid');
+    const card = document.createElement('div');
+    card.className='note';
+    card.innerHTML='<span class="badge b4">New section</span><h3>New note title</h3><p>Write note details here.</p>';
+    grid.appendChild(card); setEditable(editingEnabled); card.focus();
+  }
+  function downloadEditedHtml(){
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('.selected').forEach(el=>el.classList.remove('selected'));
+    clone.querySelectorAll('.box-tools,.add-inside').forEach(el=>el.remove());
+    clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], {type:'text/html'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'e-darpan-ux-flow-diagram-edited.html';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  }
+  window.downloadEditedHtml = downloadEditedHtml;
+  window.addFlowBox = addFlowBox;
+  window.duplicateSelectedBox = duplicateSelectedBox;
+  window.deleteSelectedBox = deleteSelectedBox;
+  window.addRouteCard = addRouteCard;
+  window.addNoteCard = addNoteCard;
+  window.toggleEditMode = toggleEditMode;
+  document.addEventListener('DOMContentLoaded', () => { enhanceBoxes(); setEditable(true); });
+</script>
+</body>
+</html>
